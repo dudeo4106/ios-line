@@ -26,3 +26,5 @@ Pods/*
 
 # firebase
 !/GoogleService-Info.plist
+GoogleService-Info.plist
+ios-line/GoogleService-Info.plist
