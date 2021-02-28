@@ -13,13 +13,23 @@ import FirebaseAuth
 class ChatListViewController: UIViewController {
     
     private let cellId = "cellId"
-    private var users = [User]()
+    private var user: User? {
+        didSet {
+            navigationItem.title = user?.username
+        }
+    }
     
     @IBOutlet weak var chatListTableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupViews()
+        confirmLoggedInUser()
+        fetchLoginUserInfo()
+    }
+    
+    private func setupViews() {
         chatListTableView.delegate = self
         chatListTableView.dataSource = self
         
@@ -27,38 +37,43 @@ class ChatListViewController: UIViewController {
         navigationItem.title = "Talk"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         
+        let rightBarButton = UIBarButtonItem(title: "new chat", style: .plain, target: self, action: #selector(tappedNavRightBarButton))
+        navigationItem.rightBarButtonItem = rightBarButton
+        navigationItem.rightBarButtonItem?.tintColor = .white
+    }
+    
+    private func confirmLoggedInUser() {
         if Auth.auth().currentUser?.uid == nil {
             let storyboard = UIStoryboard(name: "SignUp", bundle: nil)
             let signUpViewController = storyboard.instantiateViewController(withIdentifier: "SignUpViewController") as! SignUpViewController
             signUpViewController.modalPresentationStyle = .fullScreen
             self.present(signUpViewController, animated: true, completion: nil)
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        fetchUserInfoFromFirestore()
-    }
-    
-    private func fetchUserInfoFromFirestore() {
         
-        Firestore.firestore().collection("users").getDocuments { (snapshots, err) in
+    }
+    
+    @objc private func tappedNavRightBarButton(){
+        let storyboard = UIStoryboard.init(name: "UserList", bundle: nil)
+        let userListViewController = storyboard.instantiateViewController(withIdentifier: "UserListViewController")
+        let nav = UINavigationController(rootViewController: userListViewController)
+        self.present(nav, animated: true, completion: nil)
+    }
+    
+    private func fetchLoginUserInfo() {
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        Firestore.firestore().collection("users").document(uid).getDocument { (snapshot, err) in
             if let err = err {
-                print("Fail load user information \(err)")
+                print("fail get user info")
+                print(err)
                 return
             }
             
-            snapshots?.documents.forEach({ (snapshot) in
-                let dic = snapshot.data()
-                let user = User.init(dic: dic)
-                
-                self.users.append(user)
-                self.chatListTableView.reloadData()
-                
-                self.users.forEach{(user) in
-                    print("user.name: ", user.username)
-                }
-            })
+            guard let snapshot = snapshot, let dic = snapshot.data() else { return }
+            
+            let user = User(dic: dic)
+            self.user = user
         }
         
     }
@@ -73,12 +88,11 @@ extension ChatListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = chatListTableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ChatListTableViewCell
-        cell.user = users[indexPath.row]
         return cell
     }
     

@@ -10,6 +10,7 @@ target 'ios-line' do
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
   pod 'Firebase/Storage'
+  pod 'Nuke'
 
   target 'ios-lineTests' do
     inherit! :search_paths
