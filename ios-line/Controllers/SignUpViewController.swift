@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseFirestore
+import FirebaseAuth
 
 class SignUpViewController: UIViewController {
     
@@ -26,6 +29,7 @@ class SignUpViewController: UIViewController {
         registerButton.layer.cornerRadius = 15
         
         profileImageButton.addTarget(self, action: #selector(tappedProfileImageButton), for: .touchUpInside)
+        registerButton.addTarget(self, action: #selector(tappedRegosterButton), for: .touchUpInside)
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
@@ -33,6 +37,10 @@ class SignUpViewController: UIViewController {
         
         registerButton.isEnabled = false
         registerButton.backgroundColor = .rgb(red: 100, green: 100, blue: 100)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+         self.view.endEditing(true)
     }
     
     @objc private func tappedProfileImageButton() {
@@ -43,6 +51,64 @@ class SignUpViewController: UIViewController {
         self.present(imagePickerController, animated: true, completion: nil)
     }
     
+    @objc private func tappedRegosterButton() {
+        guard let image = profileImageButton.imageView?.image else { return }
+        guard let uploadImage = image.jpegData(compressionQuality: 0.3) else { return }
+        
+        let fileName = NSUUID().uuidString
+        let storageRef = Storage.storage().reference().child("profile_image").child(fileName)
+        
+        storageRef.putData(uploadImage, metadata: nil) { (metadata, err) in
+            if let err = err  {
+                print("Fail save to firestorage \(err)")
+                return
+            }
+
+            storageRef.downloadURL { (url, err) in
+                if let err = err {
+                    print("Fail download to firestorage \(err)")
+                    return
+                }
+                
+                guard let urlString = url?.absoluteString else { return }
+                self.createUserToFirestore(profileImageUrl: urlString)
+            }
+        }
+    }
+    
+    private func createUserToFirestore(profileImageUrl: String) {
+        guard let email = emailTextField.text else { return }
+        guard let password = passwordTextField.text else { return }
+        
+        print("register start!")
+        
+        Auth.auth().createUser(withEmail: email, password: password) { (res, err) in
+            if let err = err {
+                print("Auth error  \(err)")
+                return
+            }
+            
+            guard let uid = res?.user.uid else { return }
+            guard let username = self.userNameTextField.text else { return }
+            
+            let docData = [
+                "email": email,
+                "username": username,
+                "createAt": Timestamp(),
+                "profileImageUrl": profileImageUrl
+            ] as [String: Any]
+            
+            Firestore.firestore().collection("users").document(uid).setData(docData) { (err) in
+                if let err = err {
+                    print("Database connection fail \(err)")
+                    return
+                }
+                
+                print("Database save success")
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
 }
 
 extension SignUpViewController: UITextFieldDelegate {
