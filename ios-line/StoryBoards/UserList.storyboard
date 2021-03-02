@@ -82,6 +82,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Gpb-HR-mEB">
+                        <barButtonItem key="leftBarButtonItem" title="close" id="Obz-th-wyJ">
+                            <connections>
+                                <action selector="tappedCloseButton:" destination="CQY-E9-pga" id="2Mq-V3-rYj"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" style="plain" id="toH-eN-kw3">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="D8J-Gu-hWK">
                                 <rect key="frame" x="302" y="7" width="92" height="30"/>
