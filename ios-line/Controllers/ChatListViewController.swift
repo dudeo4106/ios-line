@@ -30,49 +30,57 @@ class ChatListViewController: UIViewController {
         setupViews()
         confirmLoggedInUser()
         fetchLoginUserInfo()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
         fetchChatroomsInfoFromFireStore()
     }
     
     private func fetchChatroomsInfoFromFireStore() {
-        Firestore.firestore().collection("chatRooms").getDocuments { (snapshots, err) in
-            if let err = err {
-                print("Error - Load to chatRoom information \(err)")
-                return
-            }
-            
-            snapshots?.documents.forEach({ (snapshot) in
-                let dic = snapshot.data()
-                let chatroom = ChatRoom(dic: dic)
+        Firestore.firestore().collection("chatRooms")
+            .addSnapshotListener { (snapshots, err) in
                 
-                guard let uid = Auth.auth().currentUser?.uid else { return }
-                chatroom.members.forEach { (memberUid) in
-                    if memberUid != uid {
-                        Firestore.firestore().collection("users").document(memberUid).getDocument { (snapshot, err) in
-                            if let err = err {
-                                print ("Error - Load user Information \(err)")
-                                return
-                            }
-                            
-                            guard let dic = snapshot?.data() else { return }
-                            let user = User(dic: dic)
-                            user.uid = snapshot?.documentID
-                            
-                            chatroom.partnerUser = user
-                            self.chatrooms.append(chatroom)
-                            self.chatListTableView.reloadData()
-                        }
-                    }
+                if let err = err {
+                    print("Error - Load to chatRoom information \(err)")
+                    return
                 }
-            })
+                
+                snapshots?.documentChanges.forEach({ (documentChange) in
+                    switch documentChange.type {
+                    case .added:
+                        self.handleAddedDocumentChange(documentChange: documentChange)
+                    case .modified, .removed:
+                        print("Nothing todo")
+                    }
+                })
+                
+            }
+    }
+    
+    private func handleAddedDocumentChange(documentChange: DocumentChange) {
+        let dic = documentChange.document.data()
+        let chatroom = ChatRoom(dic: dic)
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        chatroom.members.forEach { (memberUid) in
+            if memberUid != uid {
+                Firestore.firestore().collection("users").document(memberUid).getDocument { (snapshot, err) in
+                    if let err = err {
+                        print ("Error - Load user Information \(err)")
+                        return
+                    }
+                    
+                    guard let dic = snapshot?.data() else { return }
+                    let user = User(dic: dic)
+                    user.uid = documentChange.document.documentID
+                    
+                    chatroom.partnerUser = user
+                    self.chatrooms.append(chatroom)
+                    self.chatListTableView.reloadData()
+                }
+            }
         }
     }
     
     private func setupViews() {
+        chatListTableView.tableFooterView = UIView()
         chatListTableView.delegate = self
         chatListTableView.dataSource = self
         
@@ -99,7 +107,6 @@ class ChatListViewController: UIViewController {
         let storyboard = UIStoryboard.init(name: "UserList", bundle: nil)
         let userListViewController = storyboard.instantiateViewController(withIdentifier: "UserListViewController")
         let nav = UINavigationController(rootViewController: userListViewController)
-        nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: true, completion: nil)
     }
     
@@ -184,7 +191,7 @@ class ChatListTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        userImageView.layer.cornerRadius = 35
+        userImageView.layer.cornerRadius = 30
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
