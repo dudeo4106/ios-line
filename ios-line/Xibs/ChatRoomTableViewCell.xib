@@ -17,14 +17,14 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="202010_type1_1125" translatesAutoresizingMaskIntoConstraints="NO" id="NTP-Be-gyM">
-                        <rect key="frame" x="35" y="55.5" width="60" height="60"/>
+                        <rect key="frame" x="20" y="55.5" width="60" height="60"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="NTP-Be-gyM" secondAttribute="height" multiplier="1:1" id="fTM-xw-PWo"/>
                             <constraint firstAttribute="width" constant="60" id="wuW-LI-KHu"/>
                         </constraints>
                     </imageView>
                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="come to message" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z0Z-jV-qga">
-                        <rect key="frame" x="105" y="25" width="220" height="121"/>
+                        <rect key="frame" x="90" y="25" width="220" height="121"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="220" id="xY5-Tm-eeV"/>
@@ -34,7 +34,7 @@
                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                     </textView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11:59" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zhE-wb-GUP">
-                        <rect key="frame" x="330" y="134" width="34.5" height="17"/>
+                        <rect key="frame" x="315" y="134" width="34.5" height="17"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
@@ -44,7 +44,7 @@
                     <constraint firstItem="z0Z-jV-qga" firstAttribute="leading" secondItem="NTP-Be-gyM" secondAttribute="trailing" constant="10" id="KjD-YC-uqU"/>
                     <constraint firstItem="z0Z-jV-qga" firstAttribute="bottom" secondItem="zhE-wb-GUP" secondAttribute="bottom" constant="-5" id="L78-tT-krB"/>
                     <constraint firstAttribute="bottom" secondItem="z0Z-jV-qga" secondAttribute="bottom" constant="25" id="ank-UX-DV8"/>
-                    <constraint firstItem="NTP-Be-gyM" firstAttribute="leading" secondItem="Muc-Kn-vai" secondAttribute="leadingMargin" constant="15" id="iaH-3l-1bY"/>
+                    <constraint firstItem="NTP-Be-gyM" firstAttribute="leading" secondItem="Muc-Kn-vai" secondAttribute="leadingMargin" id="iaH-3l-1bY"/>
                     <constraint firstItem="zhE-wb-GUP" firstAttribute="leading" secondItem="z0Z-jV-qga" secondAttribute="trailing" constant="5" id="oUG-uf-Ekh"/>
                     <constraint firstItem="z0Z-jV-qga" firstAttribute="top" secondItem="Muc-Kn-vai" secondAttribute="top" constant="25" id="pcw-8l-cNu"/>
                     <constraint firstItem="NTP-Be-gyM" firstAttribute="centerY" secondItem="Muc-Kn-vai" secondAttribute="centerY" id="uCL-so-h3q"/>
