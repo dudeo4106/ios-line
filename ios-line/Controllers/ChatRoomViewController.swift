@@ -6,11 +6,17 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseFirestore
+import FirebaseAuth
 
 class ChatRoomViewController: UIViewController {
     
+    var user: User?
+    var chatroom: ChatRoom?
+    
     private let cellId = "cellId"
-    private var messages = [String]()
+    private var messages = [Message]()
     
     private lazy var chatInputAccessoryView: ChatInputAccessoryView = {
         let view = ChatInputAccessoryView()
@@ -28,6 +34,7 @@ class ChatRoomViewController: UIViewController {
         chatRoomTableView.dataSource = self
         chatRoomTableView.register(UINib(nibName: "ChatRoomTableViewCell", bundle: nil), forCellReuseIdentifier: cellId)
         chatRoomTableView.backgroundColor = .rgb(red: 118, green: 140, blue: 180)
+        fetchMessages()
     }
     
     override var inputAccessoryView: UIView? {
@@ -39,14 +46,57 @@ class ChatRoomViewController: UIViewController {
     override var canBecomeFirstResponder: Bool {
         return true
     }
+    
+    private func fetchMessages() {
+        guard let chatroomDocId = chatroom?.documentId else { return }
+        
+        Firestore.firestore().collection("chatRooms").document(chatroomDocId).collection("messages").addSnapshotListener { (snapshots, err) in
+            if let err = err {
+                print("Error - load to message information \(err)")
+                return
+            }
+            
+            snapshots?.documentChanges.forEach({ (documentChange) in
+                switch documentChange.type {
+                case .added:
+                    let dic = documentChange.document.data()
+                    let message = Message(dic: dic)
+                    self.messages.append(message)
+                    self.chatRoomTableView.reloadData()
+                    print(dic)
+                    
+                case .modified, .removed:
+                    print("Nothing to do")
+                }
+            })
+        }
+    }
 
 }
 
 extension ChatRoomViewController: ChatInputAccessoryViewDelegate {
     func tappedSendButton(text: String) {
-        messages.append(text)
+        
+        guard let chatroomDocId = chatroom?.documentId else { return }
+        guard let name = user?.username else { return }
+        guard let uid = Auth.auth().currentUser?.uid else { return }
         chatInputAccessoryView.removeText()
-        chatRoomTableView.reloadData()
+        
+        let docData = [
+            "name": name,
+            "createdAt": Timestamp(),
+            "uid": uid,
+            "message": text
+        ] as [String : Any]
+        
+        Firestore.firestore().collection("chatRooms").document(chatroomDocId).collection("messages").document().setData(docData) { (err) in
+            if let err = err {
+                print("Error - save to message information \(err)")
+                return
+            }
+            
+            print("OKOKOK")
+        }
     }
 }
 
@@ -61,7 +111,7 @@ extension ChatRoomViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = chatRoomTableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ChatRoomTableViewCell
-        cell.messageText = messages[indexPath.row]
+        cell.message = messages[indexPath.row]
         return cell
     }
 }

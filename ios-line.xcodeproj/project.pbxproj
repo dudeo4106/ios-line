@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0F0C65568602F7DF9FAE3315 /* Pods_ios_line.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04BFE2263AF081F404B2B2D /* Pods_ios_line.framework */; };
+		18462FDA25F0F7E2001F43FC /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18462FD925F0F7E2001F43FC /* Message.swift */; };
 		1848B4B525EE7FA900386AFE /* ChatRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848B4B425EE7FA900386AFE /* ChatRoom.swift */; };
 		184C9D1425E7DD2F0029BBA7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 184C9D1325E7DD2F0029BBA7 /* GoogleService-Info.plist */; };
 		184C9D2C25E7E1AB0029BBA7 /* SignUp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 184C9D2B25E7E1AB0029BBA7 /* SignUp.storyboard */; };
@@ -52,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		18462FD925F0F7E2001F43FC /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		1848B4B425EE7FA900386AFE /* ChatRoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoom.swift; sourceTree = "<group>"; };
 		184C9D1325E7DD2F0029BBA7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		184C9D2B25E7E1AB0029BBA7 /* SignUp.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SignUp.storyboard; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 			children = (
 				18AB10B925EBC98000BD50CB /* User.swift */,
 				1848B4B425EE7FA900386AFE /* ChatRoom.swift */,
+				18462FD925F0F7E2001F43FC /* Message.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -511,6 +514,7 @@
 				18AB10BA25EBC98000BD50CB /* User.swift in Sources */,
 				188A42E325E50B9D00E1A9C2 /* ChatListViewController.swift in Sources */,
 				188A431C25E5368900E1A9C2 /* ChatRoomTableViewCell.swift in Sources */,
+				18462FDA25F0F7E2001F43FC /* Message.swift in Sources */,
 				185AE74225E3F39600A4BA3F /* SceneDelegate.swift in Sources */,
 				1848B4B525EE7FA900386AFE /* ChatRoom.swift in Sources */,
 			);
