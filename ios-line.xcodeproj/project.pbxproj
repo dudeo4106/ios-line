@@ -31,6 +31,8 @@
 		18AB10BA25EBC98000BD50CB /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AB10B925EBC98000BD50CB /* User.swift */; };
 		18AB10C225EBDD4400BD50CB /* UserList.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18AB10C125EBDD4400BD50CB /* UserList.storyboard */; };
 		18AB10C725EBDE9600BD50CB /* UserListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AB10C625EBDE9600BD50CB /* UserListViewController.swift */; };
+		18C3A56E25F2875400EAC13C /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18C3A56D25F2875400EAC13C /* Login.storyboard */; };
+		18C3A57325F288C400EAC13C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C3A57225F288C400EAC13C /* LoginViewController.swift */; };
 		463F010872F0B9A41809D034 /* Pods_ios_line_ios_lineUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEBD5F9C830055E4166D47D /* Pods_ios_line_ios_lineUITests.framework */; };
 		D934F083C91F65BA710EED9D /* Pods_ios_lineTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D018BDBC6A50F0C7D057C94B /* Pods_ios_lineTests.framework */; };
 /* End PBXBuildFile section */
@@ -82,6 +84,8 @@
 		18AB10B925EBC98000BD50CB /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		18AB10C125EBDD4400BD50CB /* UserList.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UserList.storyboard; sourceTree = "<group>"; };
 		18AB10C625EBDE9600BD50CB /* UserListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListViewController.swift; sourceTree = "<group>"; };
+		18C3A56D25F2875400EAC13C /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
+		18C3A57225F288C400EAC13C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		2AEBD5F9C830055E4166D47D /* Pods_ios_line_ios_lineUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ios_line_ios_lineUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		85CE0B07C5C1E3324DC9559E /* Pods-ios-lineTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-lineTests.release.xcconfig"; path = "Target Support Files/Pods-ios-lineTests/Pods-ios-lineTests.release.xcconfig"; sourceTree = "<group>"; };
 		C007C40C39FD23B46024FEF7 /* Pods-ios-lineTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-lineTests.debug.xcconfig"; path = "Target Support Files/Pods-ios-lineTests/Pods-ios-lineTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -226,6 +230,7 @@
 				188A430E25E5277800E1A9C2 /* ChatRoomViewController.swift */,
 				184C9D3025E7E50A0029BBA7 /* SignUpViewController.swift */,
 				18AB10C625EBDE9600BD50CB /* UserListViewController.swift */,
+				18C3A57225F288C400EAC13C /* LoginViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -237,6 +242,7 @@
 				188A430925E5271800E1A9C2 /* ChatRoom.storyboard */,
 				184C9D2B25E7E1AB0029BBA7 /* SignUp.storyboard */,
 				18AB10C125EBDD4400BD50CB /* UserList.storyboard */,
+				18C3A56D25F2875400EAC13C /* Login.storyboard */,
 			);
 			path = StoryBoards;
 			sourceTree = "<group>";
@@ -377,6 +383,7 @@
 				1872B05425E6908600753835 /* ChatInputAccessoryView.xib in Resources */,
 				188A430A25E5271800E1A9C2 /* ChatRoom.storyboard in Resources */,
 				184C9D2C25E7E1AB0029BBA7 /* SignUp.storyboard in Resources */,
+				18C3A56E25F2875400EAC13C /* Login.storyboard in Resources */,
 				184C9D1425E7DD2F0029BBA7 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -516,6 +523,7 @@
 				188A431C25E5368900E1A9C2 /* ChatRoomTableViewCell.swift in Sources */,
 				18462FDA25F0F7E2001F43FC /* Message.swift in Sources */,
 				185AE74225E3F39600A4BA3F /* SceneDelegate.swift in Sources */,
+				18C3A57325F288C400EAC13C /* LoginViewController.swift in Sources */,
 				1848B4B525EE7FA900386AFE /* ChatRoom.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
