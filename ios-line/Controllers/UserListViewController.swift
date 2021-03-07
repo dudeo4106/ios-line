@@ -15,7 +15,7 @@ class UserListViewController: UIViewController {
     
     private let cellId = "cellId"
     private var users = [User]()
-    private var selectedUser: User?
+    private var selectedUsers: [User] = []
     
     @IBOutlet weak var userListTableView: UITableView!
     @IBOutlet weak var startChatButton: UIButton!
@@ -26,6 +26,8 @@ class UserListViewController: UIViewController {
         userListTableView.tableFooterView = UIView()
         userListTableView.delegate = self
         userListTableView.dataSource = self
+        userListTableView.allowsMultipleSelection = true
+        userListTableView.allowsMultipleSelectionDuringEditing = true
         startChatButton.layer.cornerRadius = 10
         startChatButton.isEnabled = false
         startChatButton.addTarget(self, action: #selector(tappedStartChatButton), for: .touchUpInside)
@@ -36,8 +38,12 @@ class UserListViewController: UIViewController {
     
     @objc func tappedStartChatButton() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        guard let partnerUid = self.selectedUser?.uid else { return }
-        let members = [uid, partnerUid]
+        var members = [String]()
+
+        members.append(uid)
+        self.selectedUsers.forEach({ (user: User) in
+            members.append(user.uid ?? "")
+        })
         
         let docData = [
             "members": members,
@@ -96,9 +102,18 @@ extension UserListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        startChatButton.isEnabled = true
-        let user = users[indexPath.row]
-        self.selectedUser = user
+        if (users.count > 0) {
+            startChatButton.isEnabled = true
+        }
+        let user: User = users[indexPath.row]
+        self.selectedUsers.append(user)
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let selectedUser: User = users[indexPath.row]
+        self.selectedUsers = self.selectedUsers.filter({ (user: User) -> Bool in
+            return selectedUser.uid != user.uid
+        })
     }
 }
 
@@ -124,5 +139,6 @@ class UserListTableViewCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
+        self.accessoryType = selected ? .checkmark : .none
     }
 }
