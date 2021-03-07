@@ -73,45 +73,52 @@ class ChatListViewController: UIViewController {
         
         if !isContail { return }
         
-        chatroom.members.forEach { (memberUid) in
-            if memberUid != uid {
-                Firestore.firestore().collection("users").document(memberUid).getDocument { (userSnapshot, err) in
-                    if let err = err {
-                        print ("Error - Load user Information \(err)")
-                        return
-                    }
-                    
-                    guard let dic = userSnapshot?.data() else { return }
-                    let user = User(dic: dic)
-                    user.uid = documentChange.document.documentID
-                    chatroom.partnerUser = user
-                    
-                    guard let chatroomId = chatroom.documentId else { return }
-                    let latestMessageId = chatroom.latestMessageId
-                    
-                    if latestMessageId == "" {
-                        self.chatrooms.append(chatroom)
-                        self.chatListTableView.reloadData()
-                        return
-                    }
-                    
-                    Firestore.firestore().collection("chatRooms").document(chatroomId).collection("messages").document(latestMessageId).getDocument { (messageSnapshot, err) in
-                        
+        // private
+        if (chatroom.members.count == 2) {
+            chatroom.members.forEach { (memberUid) in
+                if memberUid != uid {
+                    Firestore.firestore().collection("users").document(memberUid).getDocument { (userSnapshot, err) in
                         if let err = err {
-                            print ("Error - Load latest Information \(err)")
+                            print ("Error - Load user Information \(err)")
                             return
                         }
                         
-                        guard let dic = messageSnapshot?.data() else { return }
-                        let message = Message(dic: dic)
-                        chatroom.latestMessage = message
+                        guard let dic = userSnapshot?.data() else { return }
+                        let user = User(dic: dic)
+                        user.uid = documentChange.document.documentID
+                        chatroom.partnerUser = user
                         
-                        self.chatrooms.append(chatroom)
-                        self.chatListTableView.reloadData()
+                        guard let chatroomId = chatroom.documentId else { return }
+                        let latestMessageId = chatroom.latestMessageId
+                        
+                        if latestMessageId == "" {
+                            self.chatrooms.append(chatroom)
+                            self.chatListTableView.reloadData()
+                            return
+                        }
+                        
+                        Firestore.firestore().collection("chatRooms").document(chatroomId).collection("messages").document(latestMessageId).getDocument { (messageSnapshot, err) in
+                            
+                            if let err = err {
+                                print ("Error - Load latest Information \(err)")
+                                return
+                            }
+                            
+                            guard let dic = messageSnapshot?.data() else { return }
+                            let message = Message(dic: dic)
+                            chatroom.latestMessage = message
+                            
+                            self.chatrooms.append(chatroom)
+                            self.chatListTableView.reloadData()
+                        }
+            
                     }
-        
                 }
             }
+        }
+        // group
+        else {
+            
         }
     }
     
@@ -212,13 +219,29 @@ class ChatListTableViewCell: UITableViewCell {
     var chatroom: ChatRoom? {
         didSet {
             if let chatroom = chatroom {
-                partnerLabel.text = chatroom.partnerUser?.username
-                
-                guard let url = URL(string: chatroom.partnerUser?.profileImageUrl ?? "") else { return }
-                Nuke.loadImage(with: url, into: userImageView)
-                
-                dateLabel.text = dateFormatterForDateLabel(date: chatroom.latestMessage?.createdAt.dateValue() ?? Date())
-                lateMessageLabel.text = chatroom.latestMessage?.message
+                // private
+                if (chatroom.partnerUsers?.count == 1) {
+                    partnerLabel.text = chatroom.partnerUsers?[0].username
+                    
+                    guard let url = URL(string: chatroom.partnerUsers?[0].profileImageUrl ?? "") else { return }
+                    Nuke.loadImage(with: url, into: userImageView)
+                    
+                    dateLabel.text = dateFormatterForDateLabel(date: chatroom.latestMessage?.createdAt.dateValue() ?? Date())
+                    lateMessageLabel.text = chatroom.latestMessage?.message
+                }
+                // group
+                else {
+                    guard let url = URL(string: "https://firebasestorage.googleapis.com/v0/b/ios-line.appspot.com/o/profile_image%2Ficonfinder_Picture11_3289565.png?alt=media&token=e5793e03-1aed-46a7-a508-6d8c32c6d071") else { return }
+                    Nuke.loadImage(with: url as ImageRequestConvertible, into: userImageView)
+                    
+                    var roomName: String = "";
+                    chatroom.partnerUsers?.forEach({ (user: User) in
+                        roomName += user.username + ", "
+                    })
+                    dateLabel.text = dateFormatterForDateLabel(date: chatroom.latestMessage?.createdAt.dateValue() ?? Date())
+                    lateMessageLabel.text = chatroom.latestMessage?.message
+                    partnerLabel.text = roomName
+                }
             }
         }
     }

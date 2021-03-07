@@ -18,6 +18,7 @@ class ChatRoom {
     var latestMessage: Message?
     var documentId: String?
     var partnerUser: User?
+    var partnerUsers: [User]?
     
     init(dic: [String: Any]) {
         self.latestMessageId = dic["latestMessageId"] as? String ?? ""
