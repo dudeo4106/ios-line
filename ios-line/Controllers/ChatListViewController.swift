@@ -19,7 +19,7 @@ class ChatListViewController: UIViewController {
     
     private var user: User? {
         didSet {
-            navigationItem.title = user?.username
+            navigationItem.title = "Chat List"
         }
     }
     
@@ -121,7 +121,6 @@ class ChatListViewController: UIViewController {
         chatListTableView.dataSource = self
         
         navigationController?.navigationBar.barTintColor = .rgb(red: 39, green: 49, blue: 69)
-        navigationItem.title = "Talk"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         
         let rightBarButton = UIBarButtonItem(title: "New chat", style: .plain, target: self, action: #selector(tappedNavRightBarButton))
