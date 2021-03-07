@@ -66,7 +66,19 @@ class ChatRoomViewController: UIViewController {
                 case .added:
                     let dic = documentChange.document.data()
                     let message = Message(dic: dic)
-                    message.partnerUser = self.chatroom?.partnerUser
+                    //여기...
+                    Firestore.firestore().collection("users").document(message.uid).getDocument { (userSnapshot, err) in
+                        if let err = err {
+                            print ("Error - Load user Information \(err)")
+                            return
+                        }
+                        
+                        guard let dic = userSnapshot?.data() else { return }
+                        let user = User(dic: dic)
+                        message.partnerUser = user
+                    }
+                    //여기...
+                    
                     
                     self.messages.append(message)
                     self.messages.sort { (m1, m2) -> Bool in

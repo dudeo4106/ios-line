@@ -18,7 +18,7 @@ class ChatRoom {
     var latestMessage: Message?
     var documentId: String?
     var partnerUser: User?
-    var partnerUsers: [User]?
+    var isGroup: Bool = false
     
     init(dic: [String: Any]) {
         self.latestMessageId = dic["latestMessageId"] as? String ?? ""
