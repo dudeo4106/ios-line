@@ -8,6 +8,7 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import PKHUD
 
 class LoginViewController: UIViewController {
     
@@ -32,12 +33,16 @@ class LoginViewController: UIViewController {
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
         
+        HUD.show(.progress)
+        
         Auth.auth().signIn(withEmail: email, password: password) { (res, err) in
             if let err = err {
                 print("err - fail to login \(err)")
+                HUD.hide()
                 return
             }
             
+            HUD.hide()
             print("Login success!!!!")
             
             let nav = self.presentingViewController as! UINavigationController
@@ -46,6 +51,10 @@ class LoginViewController: UIViewController {
             
             self.dismiss(animated: true, completion: nil)
         }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
     
 }

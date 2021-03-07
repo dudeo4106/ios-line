@@ -9,6 +9,7 @@ import UIKit
 import Firebase
 import FirebaseFirestore
 import FirebaseAuth
+import PKHUD
 
 class SignUpViewController: UIViewController {
     
@@ -55,10 +56,6 @@ class SignUpViewController: UIViewController {
         self.navigationController?.pushViewController(loginViewController, animated: true)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
-         self.view.endEditing(true)
-    }
-    
     @objc private func tappedProfileImageButton() {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
@@ -68,8 +65,10 @@ class SignUpViewController: UIViewController {
     }
     
     @objc private func tappedRegosterButton() {
-        guard let image = profileImageButton.imageView?.image else { return }
-        guard let uploadImage = image.jpegData(compressionQuality: 0.3) else { return }
+        let image = profileImageButton.imageView?.image ?? UIImage(named: "none")
+        guard let uploadImage = image?.jpegData(compressionQuality: 0.3) else { return }
+        
+        HUD.show(.progress)
         
         let fileName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("profile_image").child(fileName)
@@ -77,12 +76,14 @@ class SignUpViewController: UIViewController {
         storageRef.putData(uploadImage, metadata: nil) { (metadata, err) in
             if let err = err  {
                 print("Fail save to firestorage \(err)")
+                HUD.hide()
                 return
             }
-
+            
             storageRef.downloadURL { (url, err) in
                 if let err = err {
                     print("Fail download to firestorage \(err)")
+                    HUD.hide()
                     return
                 }
                 
@@ -101,6 +102,7 @@ class SignUpViewController: UIViewController {
         Auth.auth().createUser(withEmail: email, password: password) { (res, err) in
             if let err = err {
                 print("Auth error  \(err)")
+                HUD.hide()
                 return
             }
             
@@ -117,13 +119,19 @@ class SignUpViewController: UIViewController {
             Firestore.firestore().collection("users").document(uid).setData(docData) { (err) in
                 if let err = err {
                     print("Database connection fail \(err)")
+                    HUD.hide()
                     return
                 }
                 
                 print("Database save success")
+                HUD.hide()
                 self.dismiss(animated: true, completion: nil)
             }
         }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
 }
 
