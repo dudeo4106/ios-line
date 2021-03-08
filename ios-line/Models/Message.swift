@@ -15,6 +15,7 @@ class Message {
     let message: String
     let uid: String
     let createdAt: Timestamp
+    let profileImageUrl: String
     
     var partnerUser: User?
     
@@ -23,6 +24,6 @@ class Message {
         self.message = dic["message"] as? String ?? ""
         self.uid = dic["uid"] as? String ?? ""
         self.createdAt = dic["createdAt"] as? Timestamp ?? Timestamp()
+        self.profileImageUrl = dic["profileImageUrl"] as? String ?? ""
     }
-    
 }

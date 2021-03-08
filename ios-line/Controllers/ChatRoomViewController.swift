@@ -66,19 +66,14 @@ class ChatRoomViewController: UIViewController {
                 case .added:
                     let dic = documentChange.document.data()
                     let message = Message(dic: dic)
-                    //여기...
-                    Firestore.firestore().collection("users").document(message.uid).getDocument { (userSnapshot, err) in
-                        if let err = err {
-                            print ("Error - Load user Information \(err)")
-                            return
-                        }
-                        
-                        guard let dic = userSnapshot?.data() else { return }
-                        let user = User(dic: dic)
-                        message.partnerUser = user
-                    }
-                    //여기...
-                    
+                    let userDic = [
+                        "email": self.chatroom?.partnerUser?.email ?? "",
+                        "username": message.name,
+                        "createdAt": message.createdAt,
+                        "profileImageUrl": message.profileImageUrl
+                    ] as [String : Any]
+                    let user = User(dic: userDic)
+                    message.partnerUser = user
                     
                     self.messages.append(message)
                     self.messages.sort { (m1, m2) -> Bool in
@@ -88,7 +83,6 @@ class ChatRoomViewController: UIViewController {
                     }
                     
                     self.chatRoomTableView.reloadData()
-                    // self.chatRoomTableView.scrollToRow(at: IndexPath(row: self.messages.count - 1, section: 0), at: .bottom, animated: true)
                     
                 case .modified, .removed:
                     print("Nothing to do")
@@ -109,6 +103,7 @@ extension ChatRoomViewController: ChatInputAccessoryViewDelegate {
         guard let chatroomDocId = chatroom?.documentId else { return }
         guard let name = user?.username else { return }
         guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let profileImageUrl = user?.profileImageUrl else { return }
         chatInputAccessoryView.removeText()
         let messageId = randomString(length: 20)
         
@@ -116,7 +111,8 @@ extension ChatRoomViewController: ChatInputAccessoryViewDelegate {
             "name": name,
             "createdAt": Timestamp(),
             "uid": uid,
-            "message": text
+            "message": text,
+            "profileImageUrl": profileImageUrl,
         ] as [String : Any]
         
         Firestore.firestore().collection("chatRooms").document(chatroomDocId).collection("messages").document(messageId).setData(docData) { (err) in
